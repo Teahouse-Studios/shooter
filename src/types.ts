@@ -8,10 +8,5 @@ export interface AutolinkResult {
 export interface ExtractResult {
   title: string
   extract: string
-  thumbnail: {
-    source: string
-    width: number
-    height: number
-  }
   notFound?: boolean
 }

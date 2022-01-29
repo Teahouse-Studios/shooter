@@ -34,22 +34,12 @@ export async function extractPages(
       results.push({
         title: i.title as string,
         extract: '',
-        thumbnail: { source: '', width: 0, height: 0 },
         notFound: true,
       })
       continue
     }
     const extract = (i.extract as string) || ''
-    const thumbnail = (i.thumbnail as {
-      source: string
-      width: number
-      height: number
-    }) || {
-      source: '',
-      width: 0,
-      height: 0,
-    }
-    results.push({ title: i.title as string, extract, thumbnail })
+    results.push({ title: i.title as string, extract })
   }
   if (json.continue) {
     const next = await extractPages(pageName, apiUrl, json.continue)
