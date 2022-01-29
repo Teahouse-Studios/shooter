@@ -39,11 +39,15 @@ export async function extractPages(
       })
       continue
     }
-    const extract = i.extract as string
-    const thumbnail = i.thumbnail as {
+    const extract = (i.extract as string) || ''
+    const thumbnail = (i.thumbnail as {
       source: string
       width: number
       height: number
+    }) || {
+      source: '',
+      width: 0,
+      height: 0,
     }
     results.push({ title: i.title as string, extract, thumbnail })
   }
@@ -51,10 +55,12 @@ export async function extractPages(
     const next = await extractPages(pageName, apiUrl, json.continue)
     results = results.concat(next)
   }
-  console.log(
-    `${chalk.green('success')} Extracted text and image of ${chalk.underline(
-      pageName
-    )} from ${apiUrl}.`
-  )
+  if (_continue === {}) {
+    console.log(
+      `${chalk.green('success')} Extracted text and image of ${chalk.underline(
+        pageName
+      )} from ${apiUrl}.`
+    )
+  }
   return results
 }

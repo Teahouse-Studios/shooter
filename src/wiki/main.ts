@@ -13,6 +13,7 @@ writeFile(
 export async function getDataFromMCW(
   apiUrl: string = 'https://minecraft.fandom.com/zh/api.php'
 ): Promise<ExtractResult[]> {
+  console.time(chalk.blue('info') + ' Done in')
   const [block, exclusive, item, other, dungeons, earth] = await Promise.all([
     autolink('Block', apiUrl),
     autolink('Exclusive', apiUrl),
@@ -38,7 +39,8 @@ export async function getDataFromMCW(
     extractAutolinkData(apiUrl, earth),
   ])
   console.log(`${chalk.green('success')} Extract completed.`)
-  return Array.prototype.concat(
+  console.timeLog(chalk.blue('info') + ' Done in')
+  const final = Array.prototype.concat(
     blockExtract,
     exclusiveExtract,
     itemExtract,
@@ -46,6 +48,22 @@ export async function getDataFromMCW(
     dungeonsExtract,
     earthExtract
   )
+  let result: ExtractResult[] = []
+  final.forEach((extract) => {
+    // merge every object with the same key 'title' to one object
+    const index = result.findIndex((item) => item.title === extract.title)
+    if (index === -1) {
+      result.push(extract)
+    } else {
+      const e = result[index].extract || ''
+      result[index] = {
+        ...result[index],
+        extract: e + extract.extract,
+      }
+    }
+  })
+
+  return result
 }
 
 async function extractAutolinkData(
