@@ -9,14 +9,17 @@
   "private": true,
   "devDependencies": {
     "@types/node": "^17.0.13",
-    "prettier": "^2.5.1",
+    "@types/fs-extra": "^9.0.13",
+    "@types/prettier": "^2.4.3",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.5"
   },
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.1.0",
     "chalk": "^5.0.0",
-    "node-fetch": "^3.2.0"
+    "fs-extra": "^10.0.0",
+    "node-fetch": "^3.2.0",
+    "prettier": "^2.5.1"
   },
   "prettier": {
     "singleQuote": true,

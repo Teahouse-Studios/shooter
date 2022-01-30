@@ -1,14 +1,16 @@
 import fetch from '@adobe/node-fetch-retry'
 import chalk from 'chalk'
-import { AutolinkResult } from '../types'
+import { Entry } from '../types'
 
 export async function autolink(
   moduleName: string,
   apiUrl: string,
+  sitename: string,
+  articleUrl: string,
   simple = true,
   wikiPagePrefix = ''
-): Promise<AutolinkResult[]> {
-  let res: AutolinkResult[]
+): Promise<Entry[]> {
+  let res: Entry[]
   if (simple) {
     res = await getSimple(moduleName, apiUrl)
   } else {
@@ -18,7 +20,7 @@ export async function autolink(
   async function getSimple(
     moduleName: string,
     apiUrl: string
-  ): Promise<AutolinkResult[]> {
+  ): Promise<Entry[]> {
     const al = await getAutolinkObject(moduleName, apiUrl)
     if ('error' in al) {
       console.log(
@@ -30,13 +32,13 @@ export async function autolink(
       )
       return []
     }
-    const res: AutolinkResult[] = []
+    const res: Entry[] = []
     for (const key in al) {
       const term = key
       const val = al[key] as string
       const translation = val.split('|')[1] || val
       const wikiPage = wikiPagePrefix + val.split('|')[0]
-      res.push({ term, translation, wikiPage, category: moduleName })
+      res.push({ term, translation: [translation], links: [{ site: sitename, page: wikiPage, url: encodeURI(articleUrl + wikiPage) }], tags: [`${sitename}.${moduleName}`], extract: [] })
     }
     return res
   }
@@ -44,7 +46,7 @@ export async function autolink(
   async function getComplex(
     moduleName: string,
     apiUrl: string
-  ): Promise<AutolinkResult[]> {
+  ): Promise<Entry[]> {
     const al = await getAutolinkObject(moduleName, apiUrl)
     if ('error' in al) {
       console.log(
@@ -56,7 +58,7 @@ export async function autolink(
       )
       return []
     }
-    const res: AutolinkResult[] = []
+    const res: Entry[] = []
     for (const cat in al) {
       for (const key in al[cat]) {
         const term = key
@@ -65,9 +67,10 @@ export async function autolink(
         const wikiPage = wikiPagePrefix + val.split('|')[0]
         res.push({
           term,
-          translation,
-          wikiPage,
-          category: `${moduleName}.${cat}`,
+          translation: [translation],
+          links: [{ site: 'mcwzh', page: wikiPage, url: `https://minecraft.fandom.com/zh/wiki/${encodeURIComponent(wikiPage)}` }],
+          tags: [`${sitename}.${moduleName}.${cat.replace('Sprite', '')}`],
+          extract: []
         })
       }
     }

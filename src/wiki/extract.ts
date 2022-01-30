@@ -2,7 +2,7 @@ import fetch from '@adobe/node-fetch-retry'
 import chalk from 'chalk'
 import { ExtractResult } from '../types'
 
-export async function extractPages(
+export default async function extractPages(
   pageName: string[],
   apiUrl: string,
   _continue: any = {}
@@ -16,12 +16,6 @@ export async function extractPages(
           .join('&')
       : ''
   const pageHashless = pageName.map((page) => page.split('#')[0])
-  console.log(
-    `${chalk.blue('info')} ` +
-      `${apiUrl}?action=query&prop=extracts|pageimages&exchars=200&explaintext=true&exintro=true&formatversion=2&format=json&titles=${pageHashless.join(
-        '|'
-      )}${continueParams}`
-  )
   const res = await fetch(
     `${apiUrl}?action=query&prop=extracts|pageimages&exchars=200&explaintext=true&exintro=true&formatversion=2&format=json&titles=${pageHashless.join(
       '|'
@@ -45,10 +39,10 @@ export async function extractPages(
     const next = await extractPages(pageName, apiUrl, json.continue)
     results = results.concat(next)
   }
-  if (_continue === {}) {
+  if ('continue'! in _continue) {
     console.log(
       `${chalk.green('success')} Extracted text and image of ${chalk.underline(
-        pageName
+        pageName.join(', ')
       )} from ${apiUrl}.`
     )
   }
