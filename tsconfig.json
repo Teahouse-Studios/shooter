@@ -12,5 +12,5 @@
     "lib": ["esnext"],
     "outDir": "dist/"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/translatewiki/index.ts"]
 }

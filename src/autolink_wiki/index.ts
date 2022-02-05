@@ -84,7 +84,7 @@ export async function getDataFromBEDW(
   ])
   const autolinkData = Array.prototype.concat(
     other,
-    other.filter(({ tags }) => tags.includes('Other.Vanilla')),
+    other.filter(({ tags }) => tags.includes('Other.Vanilla'))
   )
   console.log(`${chalk.green('success')} Autolink completed.`)
   console.timeLog(chalk.blue('info') + ' BEDW Done in')
@@ -99,7 +99,7 @@ async function extractAutolinkData(
   apiUrl: string,
   autolinkData: Entry[]
 ): Promise<ExtractResult[]> {
-  const pageName = autolinkData.map(({ links }) => links[0].page)
+  const pageName = autolinkData.map(({ links }) => links[0].id)
   const uniquePageName = [...new Set(pageName)]
   const max = 50
   const requests = []

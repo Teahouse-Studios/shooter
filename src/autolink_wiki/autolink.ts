@@ -38,7 +38,19 @@ export async function autolink(
       const val = al[key] as string
       const translation = val.split('|')[1] || val
       const wikiPage = wikiPagePrefix + val.split('|')[0]
-      res.push({ term, translation: [translation], links: [{ site: sitename, page: wikiPage, url: encodeURI(articleUrl + wikiPage) }], tags: [`${sitename}.${moduleName}`], extract: [] })
+      res.push({
+        term,
+        translation: [{ text: translation, partOfSpeech: 'unknown' }],
+        links: [
+          {
+            site: sitename,
+            id: wikiPage,
+            url: encodeURI(articleUrl + wikiPage),
+          },
+        ],
+        tags: [`${sitename}.${moduleName}`],
+        extract: [],
+      })
     }
     return res
   }
@@ -67,10 +79,18 @@ export async function autolink(
         const wikiPage = wikiPagePrefix + val.split('|')[0]
         res.push({
           term,
-          translation: [translation],
-          links: [{ site: 'mcwzh', page: wikiPage, url: `https://minecraft.fandom.com/zh/wiki/${encodeURIComponent(wikiPage)}` }],
+          translation: [{ text: translation, partOfSpeech: 'unknown' }],
+          links: [
+            {
+              site: 'mcwzh',
+              id: wikiPage,
+              url: `https://minecraft.fandom.com/zh/wiki/${encodeURIComponent(
+                wikiPage
+              )}`,
+            },
+          ],
           tags: [`${sitename}.${moduleName}.${cat.replace('Sprite', '')}`],
-          extract: []
+          extract: [],
         })
       }
     }

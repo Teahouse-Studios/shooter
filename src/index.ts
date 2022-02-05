@@ -1,4 +1,4 @@
-import { getDataFromMCWZH, getDataFromBEDW } from './wiki/index.js'
+import { getDataFromMCWZH, getDataFromBEDW } from './autolink_wiki/index.js'
 import combine from './combine.js'
 import chalk from 'chalk'
 import { writeFile } from 'fs'

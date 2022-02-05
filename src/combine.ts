@@ -4,7 +4,9 @@ import { Entry, ExtractResult } from './types'
 export default async function combine(): Promise<Entry[]> {
   const autolink = {
     mcwzh: JSON.parse(
-      (await fs.readFile('./generated/autolink_mcwzh.json')) as unknown as string
+      (await fs.readFile(
+        './generated/autolink_mcwzh.json'
+      )) as unknown as string
     ) as Entry[],
     bedw: JSON.parse(
       (await fs.readFile('./generated/autolink_bedw.json')) as unknown as string
@@ -20,15 +22,18 @@ export default async function combine(): Promise<Entry[]> {
   }
   for (const i of autolink.mcwzh) {
     // find the corresponding entry in extract.mcwzh
-    const entry = extract.mcwzh.find((e) => e.title === i.links[0].page.split('#')[0])
+    const entry = extract.mcwzh.find(
+      (e) => e.title === i.links[0].id.split('#')[0]
+    )
     if (entry) {
       i.extract?.push({
         ...entry,
-        source: 'mcwzh'
+        source: 'mcwzh',
       })
     } else {
       i.extract.push({
-        title: i.translation[0],
+        title: i.translation[0].text,
+        language: 'zh',
         extract: '',
         notFound: true,
         source: 'mcwzh',
@@ -43,6 +48,10 @@ export default async function combine(): Promise<Entry[]> {
     if (index === -1) {
       result.push(i)
     } else {
+      result[index].translation = [
+        ...result[index].translation,
+        ...i.translation,
+      ]
       result[index].extract = [...result[index].extract, ...i.extract]
       result[index].links = [...result[index].links, ...i.links]
       result[index].tags = [...result[index].tags, ...i.tags]

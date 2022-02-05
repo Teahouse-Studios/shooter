@@ -29,11 +29,12 @@ export default async function extractPages(
         title: i.title as string,
         extract: '',
         notFound: true,
+        language: 'zh',
       })
       continue
     }
     const extract = (i.extract as string) || ''
-    results.push({ title: i.title as string, extract })
+    results.push({ title: i.title as string, extract, language: 'zh' })
   }
   if (json.continue) {
     const next = await extractPages(pageName, apiUrl, json.continue)
