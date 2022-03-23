@@ -1,12 +1,13 @@
 import fetch from '@adobe/node-fetch-retry'
 import chalk from 'chalk'
-import { Entry } from '../types'
+import { DefinitionSource, Entry } from '../types'
 
 export async function autolink(
   moduleName: string,
   apiUrl: string,
   sitename: string,
   articleUrl: string,
+  source: DefinitionSource,
   simple = true,
   wikiPagePrefix = ''
 ): Promise<Entry[]> {
@@ -40,7 +41,9 @@ export async function autolink(
       const wikiPage = wikiPagePrefix + val.split('|')[0]
       res.push({
         term,
-        translation: [{ text: translation, partOfSpeech: 'unknown' }],
+        translation: [
+          { text: translation, partOfSpeech: 'unknown', source: source },
+        ],
         links: [
           {
             site: sitename,
@@ -79,7 +82,9 @@ export async function autolink(
         const wikiPage = wikiPagePrefix + val.split('|')[0]
         res.push({
           term,
-          translation: [{ text: translation, partOfSpeech: 'unknown' }],
+          translation: [
+            { text: translation, partOfSpeech: 'unknown', source: source },
+          ],
           links: [
             {
               site: 'mcwzh',

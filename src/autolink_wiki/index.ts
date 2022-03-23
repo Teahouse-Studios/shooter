@@ -10,12 +10,12 @@ export async function getDataFromMCWZH(
 ): Promise<WikiData> {
   console.time(chalk.blue('info') + ' MCWZH Done in')
   const [block, exclusive, item, other, dungeons, earth] = await Promise.all([
-    autolink('Block', apiUrl, sitename, articleUrl),
-    autolink('Exclusive', apiUrl, sitename, articleUrl),
-    autolink('Item', apiUrl, sitename, articleUrl),
-    autolink('Other', apiUrl, sitename, articleUrl, false),
-    autolink('Dungeons', apiUrl, sitename, articleUrl, false, 'MCD:'),
-    autolink('Earth', apiUrl, sitename, articleUrl, false, 'MCE:'),
+    autolink('Block', apiUrl, sitename, articleUrl, 'mcwzh'),
+    autolink('Exclusive', apiUrl, sitename, articleUrl, 'mcwzh'),
+    autolink('Item', apiUrl, sitename, articleUrl, 'mcwzh'),
+    autolink('Other', apiUrl, sitename, articleUrl, 'mcwzh', false),
+    autolink('Dungeons', apiUrl, sitename, articleUrl, 'mcwzh', false, 'MCD:'),
+    autolink('Earth', apiUrl, sitename, articleUrl, 'mcwzh', false, 'MCE:'),
   ])
   const autolinkData = Array.prototype.concat(
     block,
@@ -79,8 +79,8 @@ export async function getDataFromBEDW(
 ): Promise<WikiData> {
   console.time(chalk.blue('info') + ' BEDW Done in')
   let [other, gloassary] = await Promise.all([
-    autolink('Other', apiUrl, sitename, articleUrl, false),
-    autolink('Glossary', apiUrl, sitename, articleUrl, false),
+    autolink('Other', apiUrl, sitename, articleUrl, 'bedw', false),
+    autolink('Glossary', apiUrl, sitename, articleUrl, 'bedw', false),
   ])
   const autolinkData = Array.prototype.concat(
     other,

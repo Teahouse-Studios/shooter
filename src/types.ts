@@ -1,8 +1,11 @@
+export type DefinitionSource = 'mcwzh' | 'bedw' | 'microsoft' | 'translatewiki'
+
 export interface Entry {
   term: string
   translation: {
     text: string
     partOfSpeech: string | 'unknown'
+    source: DefinitionSource
   }[]
   links: {
     site: string
@@ -18,7 +21,7 @@ export interface ExtractResult {
   extract: string
   language: 'en' | 'zh'
   notFound?: boolean
-  source?: 'mcwzh' | 'bedw' | 'microsoft'
+  source?: DefinitionSource
 }
 
 export interface WikiData {

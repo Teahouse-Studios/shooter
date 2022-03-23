@@ -2,6 +2,10 @@ import fs from 'fs-extra'
 import { Entry, ExtractResult } from './types'
 
 export default async function combine(): Promise<Entry[]> {
+  const normal = {
+    translatewiki: JSON.parse(await fs.readFile('./generated/translatewiki.json', 'utf-8')) as Entry[],
+    microsoft: JSON.parse(await fs.readFile('./generated/microsoft.json', 'utf-8')) as Entry[],
+  }
   const autolink = {
     mcwzh: JSON.parse(
       (await fs.readFile(
@@ -9,15 +13,15 @@ export default async function combine(): Promise<Entry[]> {
       )) as unknown as string
     ) as Entry[],
     bedw: JSON.parse(
-      (await fs.readFile('./generated/autolink_bedw.json')) as unknown as string
+      await fs.readFile('./generated/autolink_bedw.json', 'utf-8')
     ) as Entry[],
   }
   const extract = {
     mcwzh: JSON.parse(
-      (await fs.readFile('./generated/extract_mcwzh.json')) as unknown as string
+      await fs.readFile('./generated/extract_mcwzh.json', 'utf-8')
     ) as ExtractResult[],
     bedw: JSON.parse(
-      (await fs.readFile('./generated/extract_bedw.json')) as unknown as string
+      await fs.readFile('./generated/extract_bedw.json', 'utf-8')
     ) as ExtractResult[],
   }
   for (const i of autolink.mcwzh) {
@@ -40,7 +44,7 @@ export default async function combine(): Promise<Entry[]> {
       })
     }
   }
-  const entries = [...autolink.mcwzh, ...autolink.bedw]
+  const entries = [...autolink.mcwzh, ...autolink.bedw, ...normal.translatewiki, ...normal.microsoft]
   let result: Entry[] = []
   for (const i of entries) {
     // merge entries with same term

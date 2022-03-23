@@ -1,21 +1,16 @@
 import fetch from '@adobe/node-fetch-retry'
+import chalk from 'chalk'
 import { Entry } from '../types'
-import { writeFile } from 'fs'
 import { JSDOM } from 'jsdom'
-
-writeFile(
-  'generated/microsoft.json',
-  JSON.stringify(await getMicrosoftGlossary()),
-  () => {}
-)
 
 export default async function getMicrosoftGlossary(
   link = 'https://www.microsoft.com/zh-cn/language/Terminology_Filter?&langCode=zh-CN&langID=124'
 ): Promise<Entry[]> {
+  console.time(chalk.blue('info') + ' Microsoft done in')
   const terms = await fetch(link, {
     retryOptions: { socketTimeout: 999999999999999999999 },
   })
-  console.log('response')
+  console.log(chalk.green('success') + ' Fetched data from Microsoft.')
   const results = new JSDOM(await terms.text()).window.document
   console.log('xml')
   const resTree = new JSDOM(results.querySelector('#MTCResults')!.textContent!)
@@ -37,7 +32,7 @@ export default async function getMicrosoftGlossary(
 
     glossary.push({
       term: termEnglish,
-      translation: [{ text: termChinese, partOfSpeech }],
+      translation: [{ text: termChinese, partOfSpeech, source: 'microsoft' }],
       links: [
         {
           site: 'microsoft',
@@ -47,7 +42,7 @@ export default async function getMicrosoftGlossary(
           ),
         },
       ],
-      tags: [],
+      tags: ['it.microsoft'],
       extract: [
         {
           title: termEnglish,
@@ -59,5 +54,6 @@ export default async function getMicrosoftGlossary(
     })
   })
 
+  console.timeLog(chalk.blue('info') + ' Microsoft done in')
   return glossary
 }
